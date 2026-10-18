@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>재미있는 한글 배우기</title>
+
+<style>
+    body {
+        text-align: center;
+        font-family: Arial, sans-serif;
+        background-color: #fffdf5;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 42px;
+        margin-bottom: 10px;
+    }
+
+    h2 {
+        font-size: 26px;
+        margin-bottom: 25px;
+    }
+
+    button {
+        font-size: 24px;
+        font-weight: bold;
+
+        width: 190px;
+        height: 70px;
+
+        margin: 8px;
+
+        border: 2px solid #ddd;
+        border-radius: 20px;
+
+        background-color: white;
+
+        cursor: pointer;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+    }
+
+    #bigWord {
+        font-size: 90px;
+        font-weight: bold;
+
+        margin-top: 35px;
+        margin-bottom: 10px;
+
+        min-height: 110px;
+    }
+
+    #carPicture {
+        margin-top: 10px;
+        min-height: 350px;
+    }
+
+    #carPicture img {
+        width: 350px;
+        max-width: 80%;
+        height: auto;
+
+        border-radius: 25px;
+    }
+
+    /* 폭죽 효과 */
+#confetti {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.confetti-piece {
+    position: absolute;
+    top: -30px;
+    font-size: 35px;
+    animation: fall 2.5s linear forwards;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+    <h1>🚗 재미있는 한글 배우기 🚜</h1>
+
+    <h2>자동차와 함께 한글을 배워요!</h2>
+
+
+    <button onclick="speakCar('소방차','firetruck.jpg')">🚒 소방차</button>
+
+    <button onclick="speakCar('버스','bus.jpg')">🚌 버스</button>
+
+    <button onclick="speakCar('굴착기','excavator.jpg')">🚜 굴착기</button>
+
+    <button onclick="speakCar('덤프트럭','dumptruck.jpg')">🚚 덤프트럭</button>
+
+    <button onclick="speakCar('경찰차','policecar.jpg')">🚓 경찰차</button>
+
+    <button onclick="speakCar('구급차','ambulance.jpg')">🚑 구급차</button>
+
+    <button onclick="speakCar('청소차','garbagetruck.jpg')">🚛 청소차</button>
+
+    <button onclick="speakCar('수송차','transporttruck.jpg')">🚚 수송차</button>
+
+    <button onclick="speakCar('레미콘','cementmixer.jpg')">🚛 레미콘</button>
+
+    <button onclick="speakCar('기중기','crane.jpg')">🏗️ 기중기</button>
+
+    <button onclick="speakCar('불도저','bulldozer.jpg')">🚜 불도저</button>
+
+    <button onclick="speakCar('트랙터','tractor.jpg')">🚜 트랙터</button>
+
+    <button onclick="speakCar('택시','taxi.jpg')">🚕 택시</button>
+
+    <button onclick="speakCar('승용차','car.jpg')">🚗 승용차</button>
+
+    <button onclick="speakCar('트럭','truck.jpg')">🚚 트럭</button>
+
+    <button onclick="speakCar('견인차','towtruck.jpg')">🚛 견인차</button>
+
+    <button onclick="speakCar('우편차','mailtruck.jpg')">🚐 우편차</button>
+
+    <button onclick="speakCar('유치원 버스','schoolbus.jpg')">🚌 유치원 버스</button>
+
+    <button onclick="speakCar('캠핑카','campervan.jpg')">🚐 캠핑카</button>
+
+    <button onclick="speakCar('오토바이','motorcycle.jpg')">🏍️ 오토바이</button>
+
+
+    <div id="bigWord"></div>
+
+    <div id="carPicture"></div>
+
+
+    <hr style="margin-top:50px;">
+
+<h1>🚗 자동차 이름 맞히기</h1>
+
+<p style="font-size:24px;">
+    사진을 보고 자동차 이름을 골라보세요!
+</p>
+
+<button onclick="startQuiz()">게임 시작</button>
+
+<div id="quizPicture" style="margin-top:25px;"></div>
+
+<div id="quizButtons" style="margin-top:20px;"></div>
+
+<div id="quizResult"
+     style="font-size:40px; font-weight:bold; margin-top:20px;">
+</div>
+
+<div id="confetti"></div>
+<script>
+
+    function speakCar(word, picture) {
+
+        const display = document.getElementById("bigWord");
+        const carPicture = document.getElementById("carPicture");
+
+        display.innerHTML = "";
+
+        carPicture.innerHTML =
+            '<img src="' + picture + '" alt="' + word + '" style="width:350px; max-width:80%; height:auto;">';
+
+        speechSynthesis.cancel();
+
+        let i = 0;
+
+        function nextLetter() {
+
+            if (i < word.length) {
+
+                const letter = word[i];
+
+                display.innerHTML += letter + " ";
+
+                if (letter !== " ") {
+
+                    const voice =
+                        new SpeechSynthesisUtterance(letter);
+
+                    voice.lang = "ko-KR";
+                    voice.rate = 0.7;
+
+                    speechSynthesis.speak(voice);
+                }
+
+                i++;
+
+                setTimeout(nextLetter, 1200);
+
+            } else {
+
+                setTimeout(function () {
+
+                    const voice =
+                        new SpeechSynthesisUtterance(word);
+
+                    voice.lang = "ko-KR";
+                    voice.rate = 0.8;
+
+                    speechSynthesis.speak(voice);
+
+                }, 500);
+            }
+        }
+
+        nextLetter();
+    }
+
+const cars = [
+    {name:"소방차", image:"firetruck.jpg"},
+    {name:"버스", image:"bus.jpg"},
+    {name:"굴착기", image:"excavator.jpg"},
+    {name:"덤프트럭", image:"dumptruck.jpg"},
+    {name:"경찰차", image:"policecar.jpg"},
+    {name:"구급차", image:"ambulance.jpg"},
+    {name:"청소차", image:"garbagetruck.jpg"},
+    {name:"수송차", image:"transporttruck.jpg"},
+    {name:"레미콘", image:"cementmixer.jpg"},
+    {name:"기중기", image:"crane.jpg"},
+    {name:"불도저", image:"bulldozer.jpg"},
+    {name:"트랙터", image:"tractor.jpg"},
+    {name:"택시", image:"taxi.jpg"},
+    {name:"승용차", image:"car.jpg"},
+    {name:"트럭", image:"truck.jpg"},
+    {name:"견인차", image:"towtruck.jpg"},
+    {name:"우편차", image:"mailtruck.jpg"},
+    {name:"유치원 버스", image:"schoolbus.jpg"},
+    {name:"캠핑카", image:"campervan.jpg"},
+    {name:"오토바이", image:"motorcycle.jpg"}
+];
+
+
+
+
+
+let quizStartTime;
+
+function startQuiz() {
+
+    const answer =
+        cars[Math.floor(Math.random() * cars.length)];
+
+    let choices = [answer];
+
+    while (choices.length < 3) {
+
+        const randomCar =
+            cars[Math.floor(Math.random() * cars.length)];
+
+        if (!choices.includes(randomCar)) {
+            choices.push(randomCar);
+        }
+    }
+
+    choices.sort(() => Math.random() - 0.5);
+
+    document.getElementById("quizPicture").innerHTML =
+        '<img src="' + answer.image +
+        '" style="width:350px; max-width:80%; border-radius:25px;">';
+
+    const buttons =
+        document.getElementById("quizButtons");
+
+    buttons.innerHTML = "";
+
+    document.getElementById("quizResult").innerHTML = "";
+
+    // 문제가 나온 시간 기록
+    quizStartTime = Date.now();
+
+    choices.forEach(function(car) {
+
+        const button =
+            document.createElement("button");
+
+        button.innerText = car.name;
+
+        button.onclick = function() {
+
+            const time =
+                (Date.now() - quizStartTime) / 1000;
+
+            if (car.name === answer.name) {
+
+                // 3초 안에 맞힌 경우
+                
+                if (time <= 10) {
+
+    document.getElementById("quizResult").innerHTML =
+        "🎉 🥳 ✨<br>딩동댕!";
+
+    showConfetti();
+
+                } else {
+
+                    document.getElementById("quizResult").innerHTML =
+                        "딩동댕!";
+                }
+
+                speakMessage("딩동댕");
+
+            } else {
+
+                document.getElementById("quizResult").innerHTML =
+                    "😊 다시 도전해보자!";
+
+                speakMessage("다시 도전해보자");
+            }
+        };
+
+        buttons.appendChild(button);
+    });
+}
+
+
+function speakMessage(message) {
+
+    speechSynthesis.cancel();
+
+    const voice =
+        new SpeechSynthesisUtterance(message);
+
+    voice.lang = "ko-KR";
+    voice.rate = 0.9;
+
+    speechSynthesis.speak(voice);
+}
+function showConfetti() {
+
+     fireworkSound();
+    const confetti =
+        document.getElementById("confetti");
+
+    const icons =
+        ["🎉", "✨", "⭐", "🎊", "💥"];
+
+    for (let i = 0; i < 35; i++) {
+
+        const piece =
+            document.createElement("div");
+
+        piece.className = "confetti-piece";
+
+        piece.innerText =
+            icons[Math.floor(Math.random() * icons.length)];
+
+        piece.style.left =
+            Math.random() * 100 + "%";
+
+        piece.style.animationDelay =
+            Math.random() * 0.5 + "s";
+
+        piece.style.fontSize =
+            (25 + Math.random() * 30) + "px";
+
+        confetti.appendChild(piece);
+    }
+
+
+    setTimeout(function() {
+        confetti.innerHTML = "";
+    }, 3000);
+}
+function speakMessage(message) {
+
+    speechSynthesis.cancel();
+
+    const voice =
+        new SpeechSynthesisUtterance(message);
+
+    voice.lang = "ko-KR";
+    voice.rate = 0.9;
+
+    speechSynthesis.speak(voice);
+}
+
+
+function showConfetti() {
+  fireworkSound();
+    const confetti =
+        document.getElementById("confetti");
+
+    const icons =
+        ["🎉", "✨", "⭐", "🎊", "💥"];
+
+    for (let i = 0; i < 35; i++) {
+
+        const piece =
+            document.createElement("div");
+
+        piece.className = "confetti-piece";
+
+        piece.innerText =
+            icons[Math.floor(Math.random() * icons.length)];
+
+        piece.style.left =
+            Math.random() * 100 + "%";
+
+        piece.style.animationDelay =
+            Math.random() * 0.5 + "s";
+
+        piece.style.fontSize =
+            (25 + Math.random() * 30) + "px";
+
+        confetti.appendChild(piece);
+    }
+
+    setTimeout(function() {
+        confetti.innerHTML = "";
+    }, 3000);
+}
+function fireworkSound() {
+
+    const audioContext =
+        new (window.AudioContext || window.webkitAudioContext)();
+
+    function pianoNote(frequency, startTime) {
+
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        oscillator.type = "sine";
+        oscillator.frequency.value = frequency;
+
+        gain.gain.setValueAtTime(0.3, startTime);
+        gain.gain.exponentialRampToValueAtTime(
+            0.01,
+            startTime + 0.5
+        );
+
+        oscillator.start(startTime);
+        oscillator.stop(startTime + 0.5);
+    }
+
+    const now = audioContext.currentTime;
+
+    // 딩 - 동 - 댕
+    pianoNote(523.25, now);
+    pianoNote(659.25, now + 0.25);
+    pianoNote(783.99, now + 0.5);
+}
+
+</script>
+
+</body>
+
+</html>
+
+
+    

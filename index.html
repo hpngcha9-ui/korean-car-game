@@ -176,7 +176,7 @@
 <div id="confetti"></div>
 <script>
 
- function speakCar(word, picture) {
+function speakCar(word, picture) {
 
     const display = document.getElementById("bigWord");
     const carPicture = document.getElementById("carPicture");
@@ -192,47 +192,46 @@
     });
 
     speechSynthesis.cancel();
+    speechSynthesis.resume();
 
     let i = 0;
 
-    function speakNext() {
+    function nextLetter() {
 
         if (i < word.length) {
 
             const letter = word[i];
 
-            if (letter === " ") {
-                display.innerHTML += " ";
-                i++;
-                speakNext();
-                return;
-            }
-
             display.innerHTML += letter + " ";
 
-            const voice = new SpeechSynthesisUtterance(letter);
-            voice.lang = "ko-KR";
-            voice.rate = 0.7;
+            if (letter !== " ") {
+                const voice = new SpeechSynthesisUtterance(letter);
+                voice.lang = "ko-KR";
+                voice.rate = 0.7;
+                speechSynthesis.speak(voice);
+            }
 
-            voice.onend = function() {
-                i++;
-                setTimeout(speakNext, 500);
-            };
-
-            speechSynthesis.speak(voice);
+            i++;
+            setTimeout(nextLetter, 1200);
 
         } else {
 
-            const voice = new SpeechSynthesisUtterance(word);
-            voice.lang = "ko-KR";
-            voice.rate = 0.8;
+            setTimeout(function () {
 
-            speechSynthesis.speak(voice);
+                speechSynthesis.resume();
+
+                const voice = new SpeechSynthesisUtterance(word);
+                voice.lang = "ko-KR";
+                voice.rate = 0.8;
+
+                speechSynthesis.speak(voice);
+
+            }, 500);
         }
     }
 
-    speakNext();
-}  
+    nextLetter();
+}
 
 const cars = [
     {name:"소방차", image:"firetruck.jpg"},

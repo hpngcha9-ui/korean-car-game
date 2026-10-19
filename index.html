@@ -176,66 +176,63 @@
 <div id="confetti"></div>
 <script>
 
-    function speakCar(word, picture) {
+ function speakCar(word, picture) {
 
-        const display = document.getElementById("bigWord");
-        const carPicture = document.getElementById("carPicture");
+    const display = document.getElementById("bigWord");
+    const carPicture = document.getElementById("carPicture");
 
-        display.innerHTML = "";
+    display.innerHTML = "";
 
-        carPicture.innerHTML =
-            '<img src="' + picture + '" alt="' + word + '" style="width:350px; max-width:80%; height:auto;">';
-carPicture.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-});
-        speechSynthesis.cancel();
-const unlockVoice = new SpeechSynthesisUtterance("");
-unlockVoice.lang = "ko-KR";
-speechSynthesis.speak(unlockVoice);
-        let i = 0;
+    carPicture.innerHTML =
+        '<img src="' + picture + '" alt="' + word + '" style="width:350px; max-width:80%; height:auto;">';
 
-        function nextLetter() {
+    carPicture.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
 
-            if (i < word.length) {
+    speechSynthesis.cancel();
 
-                const letter = word[i];
+    let i = 0;
 
-                display.innerHTML += letter + " ";
+    function speakNext() {
 
-                if (letter !== " ") {
+        if (i < word.length) {
 
-                    const voice =
-                        new SpeechSynthesisUtterance(letter);
+            const letter = word[i];
 
-                    voice.lang = "ko-KR";
-                    voice.rate = 0.7;
-
-                    speechSynthesis.speak(voice);
-                }
-
+            if (letter === " ") {
+                display.innerHTML += " ";
                 i++;
-
-                setTimeout(nextLetter, 1200);
-
-            } else {
-
-                setTimeout(function () {
-
-                    const voice =
-                        new SpeechSynthesisUtterance(word);
-
-                    voice.lang = "ko-KR";
-                    voice.rate = 0.8;
-
-                    speechSynthesis.speak(voice);
-
-                }, 500);
+                speakNext();
+                return;
             }
-        }
 
-        nextLetter();
+            display.innerHTML += letter + " ";
+
+            const voice = new SpeechSynthesisUtterance(letter);
+            voice.lang = "ko-KR";
+            voice.rate = 0.7;
+
+            voice.onend = function() {
+                i++;
+                setTimeout(speakNext, 500);
+            };
+
+            speechSynthesis.speak(voice);
+
+        } else {
+
+            const voice = new SpeechSynthesisUtterance(word);
+            voice.lang = "ko-KR";
+            voice.rate = 0.8;
+
+            speechSynthesis.speak(voice);
+        }
     }
+
+    speakNext();
+}  
 
 const cars = [
     {name:"소방차", image:"firetruck.jpg"},

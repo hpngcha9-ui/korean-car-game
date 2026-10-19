@@ -185,9 +185,14 @@
 
         carPicture.innerHTML =
             '<img src="' + picture + '" alt="' + word + '" style="width:350px; max-width:80%; height:auto;">';
-
+carPicture.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+});
         speechSynthesis.cancel();
-
+const unlockVoice = new SpeechSynthesisUtterance("");
+unlockVoice.lang = "ko-KR";
+speechSynthesis.speak(unlockVoice);
         let i = 0;
 
         function nextLetter() {

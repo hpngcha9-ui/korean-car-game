@@ -296,6 +296,9 @@ document.getElementById("quizPicture").scrollIntoView({
     behavior: "smooth",
     block: "center"
 });
+setTimeout(() => {
+    window.scrollBy({ top: 180, behavior: "smooth" });
+}, 500);
     const buttons =
         document.getElementById("quizButtons");
 

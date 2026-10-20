@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>재미있는 한글 배우기!</title>
+    <title>재미있는 한글 배우기</title>
 
 <style>
     body {
@@ -176,7 +176,7 @@
 <div id="confetti"></div>
 <script>
 
-function speakCar(word, picture) {
+    function speakCar(word, picture) {
 
     const display = document.getElementById("bigWord");
     const carPicture = document.getElementById("carPicture");
@@ -191,8 +191,14 @@ function speakCar(word, picture) {
         block: "center"
     });
 
-    speechSynthesis.cancel();
-    speechSynthesis.resume();
+    const cars = [
+        "소방차", "버스", "굴착기", "덤프트럭", "경찰차",
+        "구급차", "청소차", "수송차", "레미콘", "기중기",
+        "불도저", "트랙터", "택시", "승용차", "트럭",
+        "견인차", "우편차", "유치원 버스", "캠핑카", "오토바이"
+    ];
+
+    const wordNumber = cars.indexOf(word) + 1;
 
     let i = 0;
 
@@ -202,30 +208,32 @@ function speakCar(word, picture) {
 
             const letter = word[i];
 
-            display.innerHTML += letter + " ";
-
-            if (letter !== " ") {
-                const voice = new SpeechSynthesisUtterance(letter);
-                voice.lang = "ko-KR";
-                voice.rate = 0.7;
-                speechSynthesis.speak(voice);
+            if (letter === " ") {
+                display.innerHTML += " ";
+                i++;
+                nextLetter();
+                return;
             }
 
-            i++;
-            setTimeout(nextLetter, 1200);
+            display.innerHTML += letter + " ";
+
+            const letterAudio =
+                new Audio("audio/letter_" + letter.charCodeAt(0) + ".mp3");
+
+            letterAudio.onended = function () {
+                i++;
+                setTimeout(nextLetter, 400);
+            };
+
+            letterAudio.play();
 
         } else {
 
             setTimeout(function () {
+                const wordAudio =
+                    new Audio("audio/word_" + wordNumber + ".mp3");
 
-                speechSynthesis.resume();
-
-                const voice = new SpeechSynthesisUtterance(word);
-                voice.lang = "ko-KR";
-                voice.rate = 0.8;
-
-                speechSynthesis.speak(voice);
-
+                wordAudio.play();
             }, 500);
         }
     }
@@ -284,7 +292,10 @@ function startQuiz() {
     document.getElementById("quizPicture").innerHTML =
         '<img src="' + answer.image +
         '" style="width:350px; max-width:80%; border-radius:25px;">';
-
+document.getElementById("quizPicture").scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+});
     const buttons =
         document.getElementById("quizButtons");
 
@@ -339,19 +350,23 @@ function startQuiz() {
     });
 }
 
-
 function speakMessage(message) {
 
-    speechSynthesis.cancel();
+    let file;
 
-    const voice =
-        new SpeechSynthesisUtterance(message);
+    if (message === "딩동댕") {
+        file = "audio/quiz-correct.mp3";
+    } else if (message === "다시 도전해보자") {
+        file = "audio/quiz-wrong.mp3";
+    } else {
+        return;
+    }
 
-    voice.lang = "ko-KR";
-    voice.rate = 0.9;
-
-    speechSynthesis.speak(voice);
+    const audio = new Audio(file);
+    audio.play();
 }
+
+   
 function showConfetti() {
 
      fireworkSound();
@@ -388,19 +403,6 @@ function showConfetti() {
         confetti.innerHTML = "";
     }, 3000);
 }
-function speakMessage(message) {
-
-    speechSynthesis.cancel();
-
-    const voice =
-        new SpeechSynthesisUtterance(message);
-
-    voice.lang = "ko-KR";
-    voice.rate = 0.9;
-
-    speechSynthesis.speak(voice);
-}
-
 
 function showConfetti() {
   fireworkSound();

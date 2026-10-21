@@ -174,6 +174,32 @@
 </div>
 
 <div id="confetti"></div>
+
+<hr style="margin:50px 0;">
+
+<h1>🅿️ 주차장 게임</h1>
+
+<p style="font-size:28px;">
+    자! 주차해 보자! 🚗
+</p>
+
+<button onclick="startParkingGame()">주차장 게임 시작</button>
+
+<div id="parkingGame" style="margin-top:30px;">
+
+    <div id="parkingLots"
+         style="display:flex; justify-content:center; gap:15px;">
+    </div>
+
+    <div id="parkingCar"
+         style="margin-top:35px; text-align:center;">
+    </div>
+
+    <div id="parkingResult"
+         style="font-size:36px; font-weight:bold; margin-top:20px;">
+    </div>
+
+</div>
 <script>
 
     function speakCar(word, picture) {
@@ -474,12 +500,233 @@ function fireworkSound() {
     pianoNote(659.25, now + 0.25);
     pianoNote(783.99, now + 0.5);
 }
+// ================================
+// 주차장 게임
+// ================================
 
+function startParkingGame() {
+
+    const answer =
+        cars[Math.floor(Math.random() * cars.length)];
+
+    let choices = [answer];
+
+    while (choices.length < 3) {
+        const randomCar =
+            cars[Math.floor(Math.random() * cars.length)];
+
+        if (!choices.includes(randomCar)) {
+            choices.push(randomCar);
+        }
+    }
+
+    choices.sort(() => Math.random() - 0.5);
+
+    const parkingLots =
+        document.getElementById("parkingLots");
+
+    const parkingCar =
+        document.getElementById("parkingCar");
+
+    const parkingResult =
+        document.getElementById("parkingResult");
+
+    parkingLots.innerHTML = "";
+    parkingCar.innerHTML = "";
+    parkingResult.innerHTML = "";
+setTimeout(function() {
+    document.getElementById("parkingLots").scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+    setTimeout(function() {
+        window.scrollBy({
+            top: 180,
+            behavior: "smooth"
+        });
+    }, 400);
+
+}, 100);
+    // 주차칸 3개 만들기
+// 주차칸 3개 만들기
+parkingLots.style.gap = "0";
+parkingLots.style.alignItems = "flex-end";
+
+choices.forEach(function(car) {
+
+    const lot = document.createElement("div");
+
+    lot.innerText = car.name;
+    lot.dataset.name = car.name;
+if (car.name === answer.name) {
+    lot.style.color = "#ff3b30";
+} else {
+    lot.style.color = "#222";
+}
+
+   lot.style.width = "220px";
+lot.style.height = "190px";
+
+// 주차장 선
+lot.style.borderLeft = "6px solid white";
+lot.style.borderRight = "0";
+lot.style.borderTop = "0";
+lot.style.borderBottom = "6px solid white";
+
+lot.style.background = "#777";
+lot.style.boxSizing = "border-box";
+
+lot.style.color =
+    car.name === answer.name ? "#ff3333" : "white";
+
+lot.style.fontSize = "30px";
+lot.style.fontWeight = "bold";
+
+lot.style.position = "relative";
+   lot.innerHTML =
+    '<div style="font-size:46px; color:white;">P</div>' +
+    '<div style="font-size:30px; font-weight:bold; white-space:nowrap;">' +
+        car.name +
+    '</div>' +
+    '<div style="' +
+        'position:absolute;' +
+        'bottom:22px;' +
+        'left:50%;' +
+        'transform:translateX(-50%);' +
+        'width:120px;' +
+        'height:18px;' +
+        'border-radius:6px;' +
+        'background:repeating-linear-gradient(' +
+            '135deg,' +
+            '#ffd600 0px,' +
+            '#ffd600 16px,' +
+            '#222 16px,' +
+            '#222 32px' +
+        ');' +
+        'box-shadow:0 4px 3px rgba(0,0,0,0.35);' +
+    '"></div>';
+
+lot.style.borderLeft = "6px solid white";
+lot.style.borderBottom = "6px solid white";
+lot.style.borderTop = "0";
+lot.style.borderRight = "0";
+
+    lot.style.display = "flex";
+    lot.style.alignItems = "flex-start";
+    lot.style.justifyContent = "center";
+    lot.style.paddingTop = "15px";
+    lot.style.boxSizing = "border-box";
+
+    parkingLots.appendChild(lot);
+});
+
+// 마지막 주차칸 오른쪽 선
+if (parkingLots.lastElementChild) {
+    parkingLots.lastElementChild.style.borderRight = "6px solid white";
+}
+
+    // 주차할 자동차
+    const img = document.createElement("img");
+
+    img.src = answer.image;
+    img.alt = answer.name;
+    img.dataset.name = answer.name;
+    img.draggable = false;
+
+    img.style.width = "250px";
+    img.style.maxWidth = "70%";
+    img.style.borderRadius = "20px";
+    img.style.cursor = "grab";
+    img.style.touchAction = "none";
+
+    parkingCar.appendChild(img);
+
+
+
+// 자동차 드래그 시작
+// 자동차 드래그 시작
+img.addEventListener("pointerdown", function(e) {
+
+    e.preventDefault();
+
+    const startX = e.clientX;
+    const startY = e.clientY;
+
+    img.setPointerCapture(e.pointerId);
+    img.style.position = "relative";
+    img.style.zIndex = "1000";
+
+    function moveCar(e) {
+        img.style.transform =
+            "translate(" +
+            (e.clientX - startX) + "px, " +
+            (e.clientY - startY) + "px)";
+    }
+function stopCar(e) {
+
+    document.removeEventListener("pointermove", moveCar);
+    document.removeEventListener("pointerup", stopCar);
+
+    const carRect = img.getBoundingClientRect();
+    const carCenterX = carRect.left + carRect.width / 2;
+    const carCenterY = carRect.top + carRect.height / 2;
+
+    let selectedLot = null;
+
+    Array.from(parkingLots.children).forEach(function(lot) {
+
+        const lotRect = lot.getBoundingClientRect();
+
+        if (
+            carCenterX >= lotRect.left &&
+            carCenterX <= lotRect.right &&
+            carCenterY >= lotRect.top &&
+            carCenterY <= lotRect.bottom
+        ) {
+            selectedLot = lot;
+        }
+    });
+
+    if (
+        selectedLot &&
+        selectedLot.dataset.name === answer.name
+    ) {
+
+        parkingResult.innerHTML = "🎉 최고!";
+
+        img.style.transform = "none";
+        img.style.position = "static";
+        img.style.width = "150px";
+        img.style.maxWidth = "90%";
+        img.style.cursor = "default";
+        img.style.touchAction = "auto";
+
+        selectedLot.appendChild(img);
+
+        showConfetti();
+        speakMessage("딩동댕");
+
+    } else {
+
+        parkingResult.innerHTML = "😊 다시 해보자!";
+
+        img.style.transition = "transform 0.4s";
+        img.style.transform = "translate(0px, 0px)";
+
+        setTimeout(function() {
+            img.style.transition = "";
+        }, 400);
+    }
+}
+
+    document.addEventListener("pointermove", moveCar);
+    document.addEventListener("pointerup", stopCar);
+});
+}
 </script>
 
 </body>
 
 </html>
 
-
-    
